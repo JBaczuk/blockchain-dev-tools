@@ -1,4 +1,5 @@
 import struct
+import hashlib
 
 def LE32toBE(value):
     return struct.unpack("<I", struct.pack(">I", value))[0]
@@ -20,3 +21,16 @@ def BitsToTarget(bits):
 
     target = mantissa * 256 ** (exponent - 3)
     return "{0:0{1}x}".format(target, 64)
+
+def ReverseEndian(line):
+    n = 2
+    orig_list = [line[i:i+n] for i in range(0, len(line), n)]
+    reversed_list = orig_list[::-1]
+    reversed = ''.join(reversed_list)
+    return reversed
+
+def sha256(hexStr):
+    return hashlib.sha256(bytes.fromhex(hexStr)).digest().hex()
+
+def hash256(hexStr):
+    return sha256(sha256(hexStr))
