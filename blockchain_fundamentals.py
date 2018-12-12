@@ -1,5 +1,6 @@
 import struct
 import hashlib
+import random
 
 def LE32toBE(value):
     return struct.unpack("<I", struct.pack(">I", value))[0]
@@ -26,11 +27,40 @@ def ReverseEndian(line):
     n = 2
     orig_list = [line[i:i+n] for i in range(0, len(line), n)]
     reversed_list = orig_list[::-1]
-    reversed = ''.join(reversed_list)
-    return reversed
+    reversedStr = ''.join(reversed_list)
+    return reversedStr
 
-def sha256(hexStr):
-    return hashlib.sha256(bytes.fromhex(hexStr)).digest().hex()
+def sha256(value):
+    try:
+        int(value, 16)
+        return hashlib.sha256(bytes.fromhex(value)).digest().hex()
+    except ValueError:
+        return hashlib.sha256(value.encode('utf-8')).digest().hex()
+    except:
+        raise
 
-def hash256(hexStr):
-    return sha256(sha256(hexStr))
+def hash256(value):
+    return sha256(sha256(value))
+
+def ripemd160(value):
+    try:
+        int(value, 16)
+        return hashlib.new('ripemd160').update(bytes.fromhex(hexStr)).hexDigest()
+    except ValueError:
+        return hashlib.new('ripemd160').update(value.encode('utf-8')).hexDigest()
+    except:
+        raise Exception("Input format not understood")
+
+def hash160(value):
+    return ripemd160(sha256(value))
+
+def genMsgPrefix():
+    networks = ['Mainnet', 'Testnet', 'Regtest']
+    for network in networks:
+        print(network)
+        print("pchMessageStart[0] = ", hex(random.sample(range(0x80, 0xff), 1)[0]), ";", sep='')
+        print("pchMessageStart[1] = ", hex(random.sample(range(0x80, 0xff), 1)[0]), ";", sep='')
+        print("pchMessageStart[2] = ", hex(random.sample(range(0x80, 0xff), 1)[0]), ";", sep='')
+        print("pchMessageStart[3] = ", hex(random.sample(range(0x80, 0xff), 1)[0]), ";", sep='')
+        print()
+

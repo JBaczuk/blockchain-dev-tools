@@ -4,9 +4,9 @@ import argparse
 from blockchain_fundamentals import *
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Perform the SHA256 function on input hex string')
-    parser.add_argument('hexStr', metavar='hexStr')
+    parser = argparse.ArgumentParser(description='Perform the SHA256 function on input string. Can be hex or ascii.')
+    parser.add_argument('value', metavar='value')
     args = parser.parse_args()
 
-    print('result:', sha256(args.hexStr))
+    print('result:', sha256(args.value))
 
