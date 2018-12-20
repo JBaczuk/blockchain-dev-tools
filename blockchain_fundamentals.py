@@ -45,9 +45,9 @@ def hash256(value):
 def ripemd160(value):
     try:
         int(value, 16)
-        return hashlib.new('ripemd160').update(bytes.fromhex(hexStr)).hexDigest()
+        return hashlib.new('ripemd160', bytes.fromhex(value)).digest().hex()
     except ValueError:
-        return hashlib.new('ripemd160').update(value.encode('utf-8')).hexDigest()
+        return hashlib.new('ripemd160', value.encode('utf-8')).digest().hex()
     except:
         raise Exception("Input format not understood")
 
