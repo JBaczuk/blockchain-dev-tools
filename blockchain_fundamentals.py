@@ -20,7 +20,6 @@ def BE256toLE(value):
     return int(reversedStr, 16)
 
 def BitsToTarget(bits):
-    # reverse endianess
     bitsInt = int(bits, 16)
 
     exponent = (bitsInt & 0xff000000) >> 8 * 3
@@ -28,6 +27,16 @@ def BitsToTarget(bits):
 
     target = mantissa * 256 ** (exponent - 3)
     return "{0:0{1}x}".format(target, 64)
+
+# TODO:
+#def TargetToBits(target):
+#    bitsInt = int(bits, 16)
+#
+#    exponent = (bitsInt & 0xff000000) >> 8 * 3
+#    mantissa = bitsInt & 0x00ffffff
+#
+#    target = mantissa * 256 ** (exponent - 3)
+#    return "{0:0{1}x}".format(target, 64)
 
 def ReverseEndian(line):
     n = 2
