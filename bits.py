@@ -13,5 +13,5 @@ if __name__ == '__main__':
         parser.print_help()
         exit()
 
-    print('target:', BitsToTarget(args.bits))
+    print(BitsToTarget(args.bits))
 

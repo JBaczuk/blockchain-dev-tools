@@ -8,5 +8,5 @@ if __name__ == '__main__':
     parser.add_argument('value', metavar='value')
     args = parser.parse_args()
 
-    print('result:', hash256(args.value))
-
+    result = hash256(args.value)
+    print(result.hex())

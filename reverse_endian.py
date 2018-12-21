@@ -8,5 +8,5 @@ if __name__ == '__main__':
     parser.add_argument('hexStr', metavar='hexStr')
     args = parser.parse_args()
 
-    print('reversed', ReverseEndian(args.hexStr))
+    print(ReverseEndian(args.hexStr))
 
