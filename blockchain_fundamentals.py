@@ -1,6 +1,8 @@
 import struct
 import hashlib
 import random
+import ecdsa
+import codecs
 
 iseq, bseq, buffer = (
         lambda s: s,
@@ -8,6 +10,103 @@ iseq, bseq, buffer = (
         lambda s: s.buffer,
 )
 
+def ToPublicKey(privKey):
+    # Error Checking
+    if not isHex(privKey):
+        raise TypeError('Private Key argument must be valid hex')
+    if len(privKey) != 64:
+        raise ValueError('Private Key argument must be 32 bytes')
+
+    privateKeyBytes = codecs.decode(privKey, 'hex')
+    key = ecdsa.SigningKey.from_string(privateKeyBytes, curve=ecdsa.SECP256k1).verifying_key
+    keyBytes = key.to_string()
+    keyHex = codecs.encode(keyBytes, 'hex')
+    return bytearray(b'04') + keyHex
+
+def ToCompressedKey(pubKey):
+    # Error Checking
+    if not isHex(pubKey):
+        raise TypeError('Public Key argument must be valid hex')
+    if len(pubKey) != 130:
+        raise ValueError('Public Key argument must be 65 bytes')
+    
+    x = pubKey[2:66]
+    lastByte = x[-2:]
+    lastInt = int(lastByte, 16)
+    isOdd = lastInt % 2 != 0
+
+    if isOdd:
+        compressedKey = '03' + x
+    else:
+        compressedKey = '02' + x
+    return compressedKey
+
+def ToWIF(privKey, network):
+    mainnetPrefix = '80'
+    testnetPrefix = 'ef'
+    compressedSuffix = '01'
+
+    # Error Checking
+    if not isHex(privKey):
+        raise TypeError('Private Key argument must be valid hex')
+    if len(privKey) != 64:
+        raise ValueError('Private Key argument must be 32 bytes')
+
+    if network == 'mainnet':
+        extendedPriv = mainnetPrefix + privKey + compressedSuffix
+        WIF = base58encode_check(extendedPriv)
+    elif network == 'testnet' or network == 'regtest':
+        extendedPriv = testnetPrefix + privKey + compressedSuffix
+        WIF = base58encode_check(extendedPriv)
+    else:
+        raise ValueError('Network must be mainnet, testnet, or regtest')
+    return WIF
+
+def ToP2PKH(pubKey, network):
+    mainnetPrefix = '00'
+    testnetPrefix = '6f'
+    
+    # Error Checking
+    if not isHex(pubKey):
+        raise TypeError('Public Key argument must be valid hex')
+    if len(pubKey) != 66:
+        raise ValueError('Public Key argument must be 33 bytes')
+
+    hash = hash160(pubKey).hex()
+    if network == 'mainnet':
+        extendedHash = mainnetPrefix + hash
+        address = base58encode_check(extendedHash)
+    elif network == 'testnet' or network == 'regtest':
+        extendedHash = testnetPrefix + hash
+        address = base58encode_check(extendedHash)
+    else:
+        raise ValueError('Network must be mainnet, testnet, or regtest')
+
+    return address
+
+def ToP2SHP2WPKH(pubKey, network):
+    mainnetPrefix = '05'
+    testnetPrefix = 'c4'
+    
+    # Error Checking
+    if not isHex(pubKey):
+        raise TypeError('Public Key argument must be valid hex')
+    if len(pubKey) != 66:
+        raise ValueError('Public Key argument must be 33 bytes')
+
+    pubkeyHash = hash160(pubKey).hex()
+    hash = hash160('0014' + pubkeyHash).hex()
+    if network == 'mainnet':
+        extendedHash = mainnetPrefix + hash
+        address = base58encode_check(extendedHash)
+    elif network == 'testnet' or network == 'regtest':
+        extendedHash = testnetPrefix + hash
+        address = base58encode_check(extendedHash)
+    else:
+        raise ValueError('Network must be mainnet, testnet, or regtest')
+
+    return address
+    
 def LE32toBE(value):
     return struct.unpack("<I", struct.pack(">I", value))[0]
 
