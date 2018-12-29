@@ -21,7 +21,7 @@ def ToPublicKey(privKey):
     key = ecdsa.SigningKey.from_string(privateKeyBytes, curve=ecdsa.SECP256k1).verifying_key
     keyBytes = key.to_string()
     keyHex = codecs.encode(keyBytes, 'hex')
-    return bytearray(b'04') + keyHex
+    return (bytearray(b'04') + keyHex).decode('utf-8')
 
 def ToCompressedKey(pubKey):
     # Error Checking
