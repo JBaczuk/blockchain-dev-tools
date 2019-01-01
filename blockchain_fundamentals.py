@@ -3,6 +3,17 @@ import hashlib
 import random
 import ecdsa
 import codecs
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+coin = os.getenv('COIN')
+# Import the coin file
+# TODO: Check for file validity (maybe make an interface)
+try:
+    Coin = __import__('coins.' + coin, fromlist=['Coin']).Coin()
+except ModuleNotFoundError:
+    raise ModuleNotFoundError('There is no coin configuration file coins/' + coin)
 
 iseq, bseq, buffer = (
         lambda s: s,
@@ -42,10 +53,6 @@ def ToCompressedKey(pubKey):
     return compressedKey
 
 def ToWIF(privKey, network):
-    mainnetPrefix = '80'
-    testnetPrefix = 'ef'
-    compressedSuffix = '01'
-
     # Error Checking
     if not isHex(privKey):
         raise TypeError('Private Key argument must be valid hex')
@@ -53,18 +60,16 @@ def ToWIF(privKey, network):
         raise ValueError('Private Key argument must be 32 bytes')
 
     if network == 'mainnet':
-        extendedPriv = mainnetPrefix + privKey + compressedSuffix
+        extendedPriv = Coin.wifMainnetPrefix + privKey + Coin.wifCompressedSuffix
         WIF = base58encode_check(extendedPriv)
     elif network == 'testnet' or network == 'regtest':
-        extendedPriv = testnetPrefix + privKey + compressedSuffix
+        extendedPriv = Coin.wifTestnetPrefix + privKey + Coin.wifCompressedSuffix
         WIF = base58encode_check(extendedPriv)
     else:
         raise ValueError('Network must be mainnet, testnet, or regtest')
     return WIF
 
 def ToP2PKH(pubKey, network):
-    mainnetPrefix = '00'
-    testnetPrefix = '6f'
     
     # Error Checking
     if not isHex(pubKey):
@@ -74,20 +79,17 @@ def ToP2PKH(pubKey, network):
 
     hash = hash160(pubKey).hex()
     if network == 'mainnet':
-        extendedHash = mainnetPrefix + hash
+        extendedHash = Coin.p2pkhMainnetPrefix + hash
         address = base58encode_check(extendedHash)
     elif network == 'testnet' or network == 'regtest':
-        extendedHash = testnetPrefix + hash
+        extendedHash = Coin.p2pkhTestnetPrefix + hash
         address = base58encode_check(extendedHash)
     else:
         raise ValueError('Network must be mainnet, testnet, or regtest')
 
     return address
 
-def ToP2SHP2WPKH(pubKey, network):
-    mainnetPrefix = '05'
-    testnetPrefix = 'c4'
-    
+def ToP2SHP2WPKH(pubKey, network):    
     # Error Checking
     if not isHex(pubKey):
         raise TypeError('Public Key argument must be valid hex')
@@ -97,10 +99,10 @@ def ToP2SHP2WPKH(pubKey, network):
     pubkeyHash = hash160(pubKey).hex()
     hash = hash160('0014' + pubkeyHash).hex()
     if network == 'mainnet':
-        extendedHash = mainnetPrefix + hash
+        extendedHash = Coin.p2shMainnetPrefix + hash
         address = base58encode_check(extendedHash)
     elif network == 'testnet' or network == 'regtest':
-        extendedHash = testnetPrefix + hash
+        extendedHash = Coin.p2shTestnetPrefix + hash
         address = base58encode_check(extendedHash)
     else:
         raise ValueError('Network must be mainnet, testnet, or regtest')
