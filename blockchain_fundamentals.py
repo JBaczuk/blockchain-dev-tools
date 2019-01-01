@@ -52,7 +52,7 @@ def ToCompressedKey(pubKey):
         compressedKey = '02' + x
     return compressedKey
 
-def ToWIF(privKey, network):
+def ToWIF(privKey, network, compressed=True):
     # Error Checking
     if not isHex(privKey):
         raise TypeError('Private Key argument must be valid hex')
@@ -60,10 +60,16 @@ def ToWIF(privKey, network):
         raise ValueError('Private Key argument must be 32 bytes')
 
     if network == 'mainnet':
-        extendedPriv = Coin.wifMainnetPrefix + privKey + Coin.wifCompressedSuffix
+        if compressed:
+            extendedPriv = Coin.wifMainnetPrefix + privKey + Coin.wifCompressedSuffix
+        else:
+            extendedPriv = Coin.wifMainnetPrefix + privKey
         WIF = base58encode_check(extendedPriv)
     elif network == 'testnet' or network == 'regtest':
-        extendedPriv = Coin.wifTestnetPrefix + privKey + Coin.wifCompressedSuffix
+        if compressed:
+            extendedPriv = Coin.wifTestnetPrefix + privKey + Coin.wifCompressedSuffix
+        else:
+            extendedPriv = Coin.wifTestnetPrefix + privKey
         WIF = base58encode_check(extendedPriv)
     else:
         raise ValueError('Network must be mainnet, testnet, or regtest')
