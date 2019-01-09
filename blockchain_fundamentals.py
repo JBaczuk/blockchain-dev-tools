@@ -4,10 +4,8 @@ import random
 import ecdsa
 import codecs
 import os
-from dotenv import load_dotenv
 
-load_dotenv()
-coin = os.getenv('COIN')
+coin = os.environ('COIN')
 # Import the coin file
 # TODO: Check for file validity (maybe make an interface)
 try:
