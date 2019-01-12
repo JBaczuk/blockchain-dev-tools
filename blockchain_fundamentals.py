@@ -5,7 +5,7 @@ import ecdsa
 import codecs
 import os
 
-coin = os.environ('COIN')
+coin = os.environ['COIN']
 # Import the coin file
 # TODO: Check for file validity (maybe make an interface)
 try:
