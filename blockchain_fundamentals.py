@@ -165,7 +165,6 @@ def sha256(value):
         return hashlib.sha256(value).digest()
     except TypeError:
         if isHex(value):
-            print('value', value)
             return hashlib.sha256(bytes.fromhex(value)).digest()
         else:
             return hashlib.sha256(value.encode('utf-8')).digest()
