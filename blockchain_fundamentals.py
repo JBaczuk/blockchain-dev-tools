@@ -39,7 +39,7 @@ def ToCompressedKey(pubKey):
     if len(pubKey) != 130:
         raise ValueError('Public Key argument must be 65 bytes')
     
-    x = pubKey[67:]
+    x = pubKey[66:]
     lastByte = x[-2:]
     lastInt = int(lastByte, 16)
     isOdd = lastInt % 2 != 0
@@ -165,6 +165,7 @@ def sha256(value):
         return hashlib.sha256(value).digest()
     except TypeError:
         if isHex(value):
+            print('value', value)
             return hashlib.sha256(bytes.fromhex(value)).digest()
         else:
             return hashlib.sha256(value.encode('utf-8')).digest()
