@@ -39,7 +39,7 @@ def ToCompressedKey(pubKey):
     if len(pubKey) != 130:
         raise ValueError('Public Key argument must be 65 bytes')
     
-    x = pubKey[2:66]
+    x = pubKey[67:]
     lastByte = x[-2:]
     lastInt = int(lastByte, 16)
     isOdd = lastInt % 2 != 0
