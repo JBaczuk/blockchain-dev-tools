@@ -103,5 +103,5 @@ if __name__ == '__main__':
     print('Block Time (sec):', args.bts)
     print('Initial Subsidy:', args.subsidy)
     print('Halving Interval (blocks):', args.halving)
-    print('Target Max Time (months):', args.ttm)
+    # print('Target Max Time (months):', args.ttm) # not implemented yet
     print('Max Supply:', args.max)
