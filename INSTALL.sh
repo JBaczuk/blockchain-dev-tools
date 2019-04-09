@@ -1,6 +1,6 @@
-mv blockchain_fundamentals.py ../lib/python3.6
+mv blockchain_fundamentals.py ../lib/python3.7/
 cp *.py ../bin
-cp -R coins ../lib/python3.6/
+cp -R coins ../lib/python3.7/
 echo "export COIN='bitcoin'" >> ../bin/activate
 cd ../bin
 
