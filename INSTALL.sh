@@ -1,11 +1,11 @@
-mv blockchain_fundamentals.py ../lib/python3.7/
+cp blockchain_fundamentals.py ../lib/python3.6/
 cp *.py ../bin
-cp -R coins ../lib/python3.7/
+cp -R coins ../lib/python3.6/
 echo "export COIN='bitcoin'" >> ../bin/activate
 cd ../bin
 
 for file in *.py; do
-    mv -- "$file" "${file%%.py}"
+    cp -- "$file" "${file%%.py}"
 done
 
 cd ../../
