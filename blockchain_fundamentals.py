@@ -9,7 +9,7 @@ coin = os.environ['COIN']
 # Import the coin file
 # TODO: Check for file validity (maybe make an interface)
 try:
-    Coin = __import__('coins.' + coin, fromlist=['Coin']).Coin()
+    Coin = __import__(coin, fromlist=['Coin']).Coin()
 except ModuleNotFoundError:
     raise ModuleNotFoundError('There is no coin configuration file coins/' + coin)
 
