@@ -1,4 +1,4 @@
-cp blockchain_fundamentals.py ../lib/python3.6/
+cp blockchain_fundamentals.py ../lib/python3.*/
 cp *.py ../bin
 cp coins/*.py ../bin
 
