@@ -5,8 +5,9 @@ Blockchain Development Tools
 ```
 virtualenv blockchain && cd blockchain
 git clone https://github.com/JBaczuk/blockchain-dev-tools.git && cd blockchain-dev-tools
-source bin/activate
 ./INSTALL.sh
+cd ..
+source bin/activate
 pip3 install ecdsa
 ```
 
